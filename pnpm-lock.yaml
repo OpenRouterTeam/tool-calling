@@ -5,9 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@ai-sdk/openai':
-    specifier: ^0.0.34
-    version: 0.0.34(zod@3.23.8)
+  '@openrouter/ai-sdk-provider':
+    specifier: ^0.0.4
+    version: 0.0.4(zod@3.23.8)
   '@radix-ui/react-alert-dialog':
     specifier: ^1.1.1
     version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
@@ -181,17 +181,6 @@ devDependencies:
 
 packages:
 
-  /@ai-sdk/openai@0.0.34(zod@3.23.8):
-    resolution: {integrity: sha512-ArVGvhfp66zYqFBWS/rRL/3ushcjsDXQJ5HdcJaCbv9YCrFJzgSZwFj2tWMdBMeQn3O7SGgGsIT75zFgXJDIqQ==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      zod: ^3.0.0
-    dependencies:
-      '@ai-sdk/provider': 0.0.11
-      '@ai-sdk/provider-utils': 1.0.0(zod@3.23.8)
-      zod: 3.23.8
-    dev: false
-
   /@ai-sdk/provider-utils@1.0.0(zod@3.23.8):
     resolution: {integrity: sha512-Akq7MmGQII8xAuoVjJns/n/2BTUrF6qaXIj/3nEuXk/hPSdETlLWRSrjrTmLpte1VIPE5ecNzTALST+6nz47UQ==}
     engines: {node: '>=18'}
@@ -208,8 +197,31 @@ packages:
       zod: 3.23.8
     dev: false
 
+  /@ai-sdk/provider-utils@1.0.2(zod@3.23.8):
+    resolution: {integrity: sha512-57f6O4OFVNEpI8Z8o+K40tIB3YQiTw+VCql/qrAO9Utq7Ti1o6+X9tvm177DlZJL7ft0Rwzvgy48S9YhrEKgmA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
+    dependencies:
+      '@ai-sdk/provider': 0.0.12
+      eventsource-parser: 1.1.2
+      nanoid: 3.3.6
+      secure-json-parse: 2.7.0
+      zod: 3.23.8
+    dev: false
+
   /@ai-sdk/provider@0.0.11:
     resolution: {integrity: sha512-VTipPQ92Moa5Ovg/nZIc8yNoIFfukZjUHZcQMduJbiUh3CLQyrBAKTEV9AwjPy8wgVxj3+GZjon0yyOJKhfp5g==}
+    engines: {node: '>=18'}
+    dependencies:
+      json-schema: 0.4.0
+    dev: false
+
+  /@ai-sdk/provider@0.0.12:
+    resolution: {integrity: sha512-oOwPQD8i2Ynpn22cur4sk26FW3mSy6t6/X/K1Ay2yGBKYiSpRyLfObhOrZEGsXDx+3euKy4nEZ193R36NM+tpQ==}
     engines: {node: '>=18'}
     dependencies:
       json-schema: 0.4.0
@@ -592,6 +604,17 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
     dev: true
+
+  /@openrouter/ai-sdk-provider@0.0.4(zod@3.23.8):
+    resolution: {integrity: sha512-GpwWBdKWz6Yw3o6n6sx9ZqjkFHqMvTVRfb70PZVhGMIPD/1rVwZJFjDHoXIepGD3V0oGYZsFDWBSBH4OIQ4GbQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.0.0
+    dependencies:
+      '@ai-sdk/provider': 0.0.12
+      '@ai-sdk/provider-utils': 1.0.2(zod@3.23.8)
+      zod: 3.23.8
+    dev: false
 
   /@panva/hkdf@1.2.0:
     resolution: {integrity: sha512-97ZQvZJ4gJhi24Io6zI+W7B67I82q1I8i3BSzQ4OyZj1z4OW87/ruF26lrMES58inTKLy2KgVIDcx8PU4AaANQ==}

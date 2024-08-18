@@ -1,12 +1,7 @@
+import type { Event } from '@/lib/types'
 import { format, parseISO } from 'date-fns'
 
-interface Event {
-  date: string
-  headline: string
-  description: string
-}
-
-export function Events({ props: events }: { props: Event[] }) {
+export function Events({ events }: { events: Event[] }) {
   return (
     <div className="-mt-2 flex w-full flex-col gap-2 py-4">
       {events.map(event => (

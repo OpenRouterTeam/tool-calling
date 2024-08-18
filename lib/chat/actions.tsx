@@ -8,7 +8,7 @@ import {
   streamUI,
   createStreamableValue
 } from 'ai/rsc'
-import { openai } from '@ai-sdk/openai'
+import { openrouter } from '@openrouter/ai-sdk-provider'
 
 import {
   spinner,
@@ -35,6 +35,14 @@ import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
 import { Chat, Message } from '@/lib/types'
 import { auth } from '@/auth'
+import {
+  getEventsParameters,
+  listStocksParameters,
+  showStockPriceParameters,
+  showStockPurchaseParameters
+} from '../types/tools'
+
+const modelSlug = 'anthropic/claude-3.5-sonnet:beta'
 
 async function confirmPurchase(symbol: string, price: number, amount: number) {
   'use server'
@@ -127,7 +135,7 @@ async function submitUserMessage(content: string) {
   let textNode: undefined | React.ReactNode
 
   const result = await streamUI({
-    model: openai('gpt-3.5-turbo'),
+    model: openrouter(modelSlug),
     initial: <SpinnerMessage />,
     system: `\
     You are a stock trading conversation bot and you can help users buy stocks, step by step.
@@ -179,15 +187,7 @@ async function submitUserMessage(content: string) {
     tools: {
       listStocks: {
         description: 'List three imaginary stocks that are trending.',
-        parameters: z.object({
-          stocks: z.array(
-            z.object({
-              symbol: z.string().describe('The symbol of the stock'),
-              price: z.number().describe('The price of the stock'),
-              delta: z.number().describe('The change in price of the stock')
-            })
-          )
-        }),
+        parameters: listStocksParameters,
         generate: async function* ({ stocks }) {
           yield (
             <BotCard>
@@ -232,7 +232,7 @@ async function submitUserMessage(content: string) {
 
           return (
             <BotCard>
-              <Stocks props={stocks} />
+              <Stocks stocks={stocks} />
             </BotCard>
           )
         }
@@ -240,15 +240,7 @@ async function submitUserMessage(content: string) {
       showStockPrice: {
         description:
           'Get the current stock price of a given stock or currency. Use this to show the price to the user.',
-        parameters: z.object({
-          symbol: z
-            .string()
-            .describe(
-              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
-            ),
-          price: z.number().describe('The price of the stock.'),
-          delta: z.number().describe('The change in price of the stock')
-        }),
+        parameters: showStockPriceParameters,
         generate: async function* ({ symbol, price, delta }) {
           yield (
             <BotCard>
@@ -293,7 +285,7 @@ async function submitUserMessage(content: string) {
 
           return (
             <BotCard>
-              <Stock props={{ symbol, price, delta }} />
+              <Stock stock={{ symbol, price, delta }} />
             </BotCard>
           )
         }
@@ -301,20 +293,7 @@ async function submitUserMessage(content: string) {
       showStockPurchase: {
         description:
           'Show price and the UI to purchase a stock or currency. Use this if the user wants to purchase a stock or currency.',
-        parameters: z.object({
-          symbol: z
-            .string()
-            .describe(
-              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
-            ),
-          price: z.number().describe('The price of the stock.'),
-          numberOfShares: z
-            .number()
-            .optional()
-            .describe(
-              'The **number of shares** for a stock or currency to purchase. Can be optional if the user did not specify it.'
-            )
-        }),
+        parameters: showStockPurchaseParameters,
         generate: async function* ({ symbol, price, numberOfShares = 100 }) {
           const toolCallId = nanoid()
 
@@ -389,7 +368,8 @@ async function submitUserMessage(content: string) {
                       result: {
                         symbol,
                         price,
-                        numberOfShares
+                        numberOfShares,
+                        status: 'requires_action' // TODO verify
                       }
                     }
                   ]
@@ -400,7 +380,7 @@ async function submitUserMessage(content: string) {
             return (
               <BotCard>
                 <Purchase
-                  props={{
+                  purchase={{
                     numberOfShares,
                     symbol,
                     price: +price,
@@ -415,17 +395,7 @@ async function submitUserMessage(content: string) {
       getEvents: {
         description:
           'List funny imaginary events between user highlighted dates that describe stock activity.',
-        parameters: z.object({
-          events: z.array(
-            z.object({
-              date: z
-                .string()
-                .describe('The date of the event, in ISO-8601 format'),
-              headline: z.string().describe('The headline of the event'),
-              description: z.string().describe('The description of the event')
-            })
-          )
-        }),
+        parameters: getEventsParameters,
         generate: async function* ({ events }) {
           yield (
             <BotCard>
@@ -470,7 +440,7 @@ async function submitUserMessage(content: string) {
 
           return (
             <BotCard>
-              <Events props={events} />
+              <Events events={events} />
             </BotCard>
           )
         }
@@ -526,7 +496,7 @@ export const AI = createAI<AIState, UIState>({
       const { chatId, messages } = state
 
       const createdAt = new Date()
-      const userId = session.user.id as string
+      const userId = session.user.id
       const path = `/chat/${chatId}`
 
       const firstMessageContent = messages[0].content as string
@@ -556,28 +526,18 @@ export const getUIStateFromAIState = (aiState: Chat) => {
       display:
         message.role === 'tool' ? (
           message.content.map(tool => {
-            return tool.toolName === 'listStocks' ? (
-              <BotCard>
-                {/* TODO: Infer types based on the tool result*/}
-                {/* @ts-expect-error */}
-                <Stocks props={tool.result} />
-              </BotCard>
-            ) : tool.toolName === 'showStockPrice' ? (
-              <BotCard>
-                {/* @ts-expect-error */}
-                <Stock props={tool.result} />
-              </BotCard>
-            ) : tool.toolName === 'showStockPurchase' ? (
-              <BotCard>
-                {/* @ts-expect-error */}
-                <Purchase props={tool.result} />
-              </BotCard>
-            ) : tool.toolName === 'getEvents' ? (
-              <BotCard>
-                {/* @ts-expect-error */}
-                <Events props={tool.result} />
-              </BotCard>
-            ) : null
+            switch (tool.toolName) {
+              case 'listStocks':
+                return <Stocks stocks={tool.result} />
+              case 'showStockPrice':
+                return <Stock stock={tool.result} />
+              case 'showStockPurchase':
+                return <Purchase purchase={tool.result} />
+              case 'getEvents':
+                return <Events events={tool.result} />
+              default:
+                return null
+            }
           })
         ) : message.role === 'user' ? (
           <UserMessage>{message.content as string}</UserMessage>

@@ -5,14 +5,9 @@ import { scaleLinear } from 'd3-scale'
 import { subMonths, format } from 'date-fns'
 import { useResizeObserver } from 'usehooks-ts'
 import { useAIState } from 'ai/rsc'
+import type { Stock } from '@/lib/types'
 
-interface Stock {
-  symbol: string
-  price: number
-  delta: number
-}
-
-export function Stock({ props: { symbol, price, delta } }: { props: Stock }) {
+export function Stock({ stock: { symbol, price, delta } }: { stock: Stock }) {
   const [aiState, setAIState] = useAIState()
   const id = useId()
 
@@ -40,30 +35,34 @@ export function Stock({ props: { symbol, price, delta } }: { props: Stock }) {
     [price - price / 2, price + price / 2]
   )
 
-  useEffect(() => {
-    if (startHighlight && endHighlight) {
-      const message = {
-        id,
-        role: 'system' as const,
-        content: `[User has highlighted dates between between ${format(
-          xToDate(startHighlight),
-          'd LLL'
-        )} and ${format(xToDate(endHighlight), 'd LLL, yyyy')}`
-      }
+  useEffect(
+    () => {
+      if (startHighlight && endHighlight) {
+        const message = {
+          id,
+          role: 'system' as const,
+          content: `[User has highlighted dates between between ${format(
+            xToDate(startHighlight),
+            'd LLL'
+          )} and ${format(xToDate(endHighlight), 'd LLL, yyyy')}`
+        }
 
-      if (aiState.messages[aiState.messages.length - 1]?.id === id) {
-        setAIState({
-          ...aiState,
-          messages: [...aiState.messages.slice(0, -1), message]
-        })
-      } else {
-        setAIState({
-          ...aiState,
-          messages: [...aiState.messages, message]
-        })
+        if (aiState.messages[aiState.messages.length - 1]?.id === id) {
+          setAIState({
+            ...aiState,
+            messages: [...aiState.messages.slice(0, -1), message]
+          })
+        } else {
+          setAIState({
+            ...aiState,
+            messages: [...aiState.messages, message]
+          })
+        }
       }
-    }
-  }, [startHighlight, endHighlight])
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [startHighlight, endHighlight]
+  )
 
   return (
     <div className="rounded-xl border bg-zinc-950 p-4 text-green-400">

@@ -41,7 +41,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
     redirect(`/login?next=/chat/${params.id}`)
   }
 
-  const userId = session.user.id as string
+  const userId = session.user.id
   const chat = await getChat(params.id, userId)
 
   if (!chat || 'error' in chat) {

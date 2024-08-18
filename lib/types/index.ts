@@ -1,7 +1,26 @@
-import { CoreMessage } from 'ai'
+import { MessageBase } from './ai'
 
-export type Message = CoreMessage & {
+export type Message = MessageBase & {
   id: string
+}
+
+export type Stock = {
+  symbol: string
+  price: number
+  delta: number
+}
+
+export type Event = {
+  date: string
+  headline: string
+  description: string
+}
+
+export type Purchase = {
+  numberOfShares?: number
+  symbol: string
+  price: number
+  status: 'requires_action' | 'completed' | 'expired'
 }
 
 export interface Chat extends Record<string, any> {
@@ -33,7 +52,7 @@ export interface AuthResult {
   message: string
 }
 
-export interface User extends Record<string, any> {
+export interface User extends Record<string, unknown> {
   id: string
   email: string
   password: string
