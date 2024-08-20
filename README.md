@@ -1,9 +1,9 @@
 <a href="https://openrouter.ai/">
-  <h1 align="center">Executive Assistant</h1>
+  <h1 align="center">OpenRouter Tool Calling Demo</h1>
 </a>
 
 <p align="center">
-  An EA for everyone.
+  Multi-model streaming UI via function calling
 </p>
 
 <p align="center">
