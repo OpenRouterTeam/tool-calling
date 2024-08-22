@@ -61,7 +61,9 @@ export function Purchase({
       <div className="text-lg text-zinc-300">{symbol}</div>
       <div className="text-3xl font-bold">${price}</div>
       {purchasingUI ? (
-        <div className="mt-4 text-zinc-200">{purchasingUI}</div>
+        <div className="mt-4 text-zinc-700 dark:text-zinc-200">
+          {purchasingUI}
+        </div>
       ) : status === 'requires_action' ? (
         <>
           <div className="relative pb-6 mt-6">

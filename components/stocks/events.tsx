@@ -7,12 +7,12 @@ export function Events({ events }: { events: Event[] }) {
       {events.map(event => (
         <div
           key={event.date}
-          className="flex shrink-0 flex-col gap-1 rounded-lg bg-zinc-800 p-4"
+          className="flex shrink-0 flex-col gap-1 rounded-lg bg-white dark:bg-zinc-800  p-4"
         >
           <div className="text-sm text-zinc-400">
             {format(parseISO(event.date), 'dd LLL, yyyy')}
           </div>
-          <div className="text-base font-bold text-zinc-200">
+          <div className="text-base font-bold text-zinc-700 dark:text-zinc-200">
             {event.headline}
           </div>
           <div className="text-zinc-500">

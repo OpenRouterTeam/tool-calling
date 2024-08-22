@@ -15,7 +15,7 @@ export function Stocks({ stocks }: { stocks: Stock[] }) {
         {stocks.map(stock => (
           <button
             key={stock.symbol}
-            className="flex cursor-pointer flex-row gap-2 rounded-lg bg-zinc-800 p-2 text-left hover:bg-zinc-700 sm:w-52"
+            className="flex cursor-pointer flex-row gap-2 rounded-lg bg-white dark:bg-zinc-800  p-2 text-left hover:bg-zinc-700 sm:w-52"
             onClick={async () => {
               const response = await submitUserMessage(`View ${stock.symbol}`)
               setMessages(currentMessages => [...currentMessages, response])
