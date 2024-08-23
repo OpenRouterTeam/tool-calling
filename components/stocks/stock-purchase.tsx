@@ -54,11 +54,11 @@ export function Purchase({
   }
 
   return (
-    <div className="p-4 text-green-400 border rounded-xl bg-zinc-950">
+    <div className="p-4 text-green-400 border rounded-xl dark:bg-zinc-950 z-10">
       <div className="inline-block float-right px-2 py-1 text-xs rounded-full bg-white/10">
         +1.23% ↑
       </div>
-      <div className="text-lg text-zinc-300">{symbol}</div>
+      <div className="text-lg text-zinc-700 dark:text-zinc-300">{symbol}</div>
       <div className="text-3xl font-bold">${price}</div>
       {purchasingUI ? (
         <div className="mt-4 text-zinc-700 dark:text-zinc-200">

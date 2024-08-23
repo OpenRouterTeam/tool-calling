@@ -62,7 +62,7 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
       ref={scrollRef}
     >
       <div
-        className={cn('pb-[200px] pt-4 md:pt-10', className)}
+        className={cn('pb-[250px] pt-4 md:pt-10', className)}
         ref={messagesRef}
       >
         {messages.length ? (
