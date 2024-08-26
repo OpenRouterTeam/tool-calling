@@ -13,7 +13,7 @@ export const EventsSkeleton = () => {
       {placeholderEvents.map(event => (
         <div
           key={event.date}
-          className="flex shrink-0 flex-col gap-1 rounded-lg bg-zinc-800 p-4"
+          className="flex shrink-0 flex-col gap-1 rounded-lg bg-white dark:bg-zinc-800  p-4"
         >
           <div className="w-fit rounded-md bg-zinc-700 text-sm text-transparent">
             {event.date}

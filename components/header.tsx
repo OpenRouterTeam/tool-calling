@@ -6,7 +6,7 @@ import { auth } from '@/auth'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
   IconGitHub,
-  IconNextChat,
+  IconOpenRouter,
   IconSeparator,
   IconVercel
 } from '@/components/ui/icons'
@@ -28,9 +28,9 @@ async function UserOrLogin() {
           <SidebarToggle />
         </>
       ) : (
-        <Link href="/new" rel="nofollow">
-          <IconNextChat className="size-6 mr-2 dark:hidden" inverted />
-          <IconNextChat className="hidden size-6 mr-2 dark:block" />
+        <Link href="/new" rel="nofollow" className="flex items-center mr-2">
+          <IconOpenRouter className="size-3.5 mr-2 inline" />
+          <span className="font-medium text-sm">OpenRouter</span>
         </Link>
       )}
       <div className="flex items-center">

@@ -65,13 +65,13 @@ export function Stock({ stock: { symbol, price, delta } }: { stock: Stock }) {
   )
 
   return (
-    <div className="rounded-xl border bg-zinc-950 p-4 text-green-400">
+    <div className="rounded-xl border bg-white dark:bg-zinc-950 p-4 text-green-400">
       <div className="float-right inline-block rounded-full bg-white/10 px-2 py-1 text-xs">
         {`${delta > 0 ? '+' : ''}${((delta / price) * 100).toFixed(2)}% ${
           delta > 0 ? '↑' : '↓'
         }`}
       </div>
-      <div className="text-lg text-zinc-300">{symbol}</div>
+      <div className="text-lg text-zinc-700 dark:text-zinc-300">{symbol}</div>
       <div className="text-3xl font-bold">${price}</div>
       <div className="text mt-1 text-xs text-zinc-500">
         Closed: Feb 27, 4:59 PM EST
@@ -125,14 +125,14 @@ export function Stock({ stock: { symbol, price, delta } }: { stock: Stock }) {
       >
         {priceAtTime.x > 0 ? (
           <div
-            className="pointer-events-none absolute z-10 flex w-fit select-none gap-2 rounded-md bg-zinc-800 p-2"
+            className="pointer-events-none absolute z-10 flex w-fit select-none gap-2 rounded-md bg-white dark:bg-zinc-800  p-2"
             style={{
               left: priceAtTime.x - 124 / 2,
               top: 30
             }}
           >
             <div className="text-xs tabular-nums">${priceAtTime.value}</div>
-            <div className="text-xs tabular-nums text-zinc-400">
+            <div className="text-xs tabular-nums text-zinc-500">
               {priceAtTime.time}
             </div>
           </div>

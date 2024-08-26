@@ -41,7 +41,7 @@ export const showStockPurchaseParameters = z.object({
   symbol: z
     .string()
     .describe(
-      'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+      'The name or symbol of the stock or currency. e.g. NVDA/AAPL/USD.'
     ),
   price: z.number().describe('The price of the stock.'),
   numberOfShares: z
@@ -56,7 +56,7 @@ export const showStockPriceParameters = z.object({
   symbol: z
     .string()
     .describe(
-      'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+      'The name or symbol of the stock or currency. e.g. NVDA/AAPL/USD.'
     ),
   price: z.number().describe('The price of the stock.'),
   delta: z.number().describe('The change in price of the stock')
