@@ -8,7 +8,7 @@ import {
   streamUI,
   createStreamableValue
 } from 'ai/rsc'
-import { openrouter } from '@openrouter/ai-sdk-provider'
+import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 
 import {
   spinner,
@@ -19,7 +19,6 @@ import {
   Purchase
 } from '@/components/stocks'
 
-import { z } from 'zod'
 import { EventsSkeleton } from '@/components/stocks/events-skeleton'
 import { Events } from '@/components/stocks/events'
 import { StocksSkeleton } from '@/components/stocks/stocks-skeleton'
@@ -41,8 +40,24 @@ import {
   showStockPriceParameters,
   showStockPurchaseParameters
 } from '../types/tools'
+import { CoreMessage } from 'ai'
 
-const modelSlug = 'anthropic/claude-3.5-sonnet:beta'
+const defaultModelSlug = 'anthropic/claude-3.5-sonnet:beta'
+const systemMessage = `\
+You are a stock trading conversation bot and you can help users buy stocks, step by step.
+You and the user can discuss stock prices and the user can adjust the amount of stocks they want to buy, or place an order, in the UI.
+
+Messages inside [] means that it's a UI element or a user event. For example:
+- "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
+- "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
+
+If the user requests purchasing a stock, call \`show_stock_purchase_ui\` to show the purchase UI.
+If the user just wants the price, call \`show_stock_price\` to show the price.
+If you want to show trending stocks, call \`list_stocks\`.
+If you want to show events, call \`get_events\`.
+If the user wants to sell stock, or complete another impossible task, respond that you are a demo and cannot do that.
+
+Besides that, you can also chat with users and do some calculations if needed.`
 
 async function confirmPurchase(symbol: string, price: number, amount: number) {
   'use server'
@@ -114,51 +129,53 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
   }
 }
 
-async function submitUserMessage(content: string) {
+async function submitUserMessage(content: string, modelSlug?: string) {
   'use server'
 
   const aiState = getMutableAIState<typeof AI>()
 
+  const prevConversation = aiState.get().messages
+  const userMessage = {
+    id: nanoid(),
+    role: 'user',
+    content
+  } satisfies Message
+
   aiState.update({
     ...aiState.get(),
-    messages: [
-      ...aiState.get().messages,
-      {
-        id: nanoid(),
-        role: 'user',
-        content
-      }
-    ]
+    messages: [...prevConversation, userMessage]
   })
 
   let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
   let textNode: undefined | React.ReactNode
 
+  const openrouter = createOpenRouter({
+    // apiKey: process.env.OPENROUTER_API_KEY,
+    // send extra body parameters to openrouter if needed: https://openrouter.ai/docs
+    extraBody: {
+      provider: {
+        order: ['OctoAI', 'Lepton']
+      }
+    },
+    baseURL: 'http://localhost:3000/api/v1'
+  })
+  const model = openrouter(modelSlug || defaultModelSlug)
+  const messages = [
+    {
+      role: 'system',
+      content: systemMessage
+    },
+    ...aiState.get().messages.map((message: any) => ({
+      role: message.role,
+      content: message.content,
+      name: message.name
+    }))
+  ] satisfies CoreMessage[]
+
   const result = await streamUI({
-    model: openrouter(modelSlug),
+    model,
     initial: <SpinnerMessage />,
-    system: `\
-    You are a stock trading conversation bot and you can help users buy stocks, step by step.
-    You and the user can discuss stock prices and the user can adjust the amount of stocks they want to buy, or place an order, in the UI.
-    
-    Messages inside [] means that it's a UI element or a user event. For example:
-    - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
-    - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
-    
-    If the user requests purchasing a stock, call \`show_stock_purchase_ui\` to show the purchase UI.
-    If the user just wants the price, call \`show_stock_price\` to show the price.
-    If you want to show trending stocks, call \`list_stocks\`.
-    If you want to show events, call \`get_events\`.
-    If the user wants to sell stock, or complete another impossible task, respond that you are a demo and cannot do that.
-    
-    Besides that, you can also chat with users and do some calculations if needed.`,
-    messages: [
-      ...aiState.get().messages.map((message: any) => ({
-        role: message.role,
-        content: message.content,
-        name: message.name
-      }))
-    ],
+    messages,
     text: ({ content, done, delta }) => {
       if (!textStream) {
         textStream = createStreamableValue('')

@@ -4,10 +4,13 @@ import { useActions, useUIState } from 'ai/rsc'
 
 import type { AI } from '@/lib/chat/actions'
 import type { Stock } from '@/lib/types'
+import { useQueryState } from 'nuqs'
+import { handleMessageSubmission } from '@/lib/chat/utils'
 
 export function Stocks({ stocks }: { stocks: Stock[] }) {
   const [, setMessages] = useUIState<typeof AI>()
   const { submitUserMessage } = useActions()
+  const [modelSlug, _] = useQueryState('modelSlug')
 
   return (
     <div>
@@ -15,11 +18,16 @@ export function Stocks({ stocks }: { stocks: Stock[] }) {
         {stocks.map(stock => (
           <button
             key={stock.symbol}
-            className="flex cursor-pointer flex-row gap-2 rounded-lg bg-white dark:bg-zinc-800  p-2 text-left hover:bg-zinc-700 sm:w-52"
-            onClick={async () => {
-              const response = await submitUserMessage(`View ${stock.symbol}`)
-              setMessages(currentMessages => [...currentMessages, response])
-            }}
+            className="flex cursor-pointer flex-row gap-2 rounded-lg bg-white dark:bg-zinc-800 p-2 text-left hover:bg-zinc-700 sm:w-52"
+            onClick={() =>
+              handleMessageSubmission(
+                `View ${stock.symbol}`,
+                modelSlug,
+                setMessages,
+                submitUserMessage,
+                false
+              )
+            }
           >
             <div
               className={`text-xl ${
