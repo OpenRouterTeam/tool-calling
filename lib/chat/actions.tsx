@@ -156,8 +156,7 @@ async function submitUserMessage(content: string, modelSlug?: string) {
       provider: {
         order: ['OctoAI', 'Lepton']
       }
-    },
-    baseURL: 'http://localhost:3000/api/v1'
+    }
   })
   const model = openrouter(modelSlug || defaultModelSlug)
   const messages = [
