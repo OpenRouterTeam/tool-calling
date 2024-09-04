@@ -56,7 +56,7 @@ export function ModelSelectContent() {
       <SelectContent className="w-full">
         <SelectGroup>
           <SelectLabel className="flex items-center gap-1">
-            OpenRouter Tool Calling Models
+            OpenRouter Tool Calling Models [A-Z]
             <Tooltip delayDuration={0}>
               <TooltipPortal>
                 <TooltipContent className="z-50">

@@ -14,6 +14,8 @@ import { useQueryState } from 'nuqs'
 import { Suspense } from 'react'
 import { SelectValue } from '@/components/ui/select'
 import { handleMessageSubmission } from '@/lib/chat/utils'
+import { useOpenRouterAuth } from '@/app/openrouter-auth-provider'
+import ErrorBoundary from '@/components/error-boundary'
 
 export interface ChatPanelProps {
   id?: string
@@ -34,6 +36,7 @@ export function ChatPanel({
 }: ChatPanelProps) {
   const [aiState] = useAIState()
   const [messages, setMessages] = useUIState<typeof AI>()
+  const { openRouterKey, setIsDialogOpen } = useOpenRouterAuth()
   const { submitUserMessage } = useActions()
   const [modelSlug, _] = useQueryState('modelSlug')
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false)
@@ -77,14 +80,19 @@ export function ChatPanel({
                 className={`cursor-pointer rounded-lg border bg-white p-4 hover:bg-zinc-50 dark:bg-zinc-950 dark:hover:bg-zinc-900 ${
                   index > 1 && 'hidden md:block'
                 }`}
-                onClick={() =>
+                onClick={() => {
+                  if (!openRouterKey) {
+                    setIsDialogOpen(true)
+                    return
+                  }
                   handleMessageSubmission(
                     example.message,
                     modelSlug,
+                    openRouterKey,
                     setMessages,
                     submitUserMessage
                   )
-                }
+                }}
               >
                 <div className="text-sm font-semibold">{example.heading}</div>
                 <div className="text-sm text-zinc-600">
@@ -127,7 +135,11 @@ export function ChatPanel({
           <Suspense fallback={<SelectValue placeholder="Loading models..." />}>
             <ModelSelectContent />
           </Suspense>
-          <PromptForm input={input} setInput={setInput} />
+          <ErrorBoundary
+            fallback={<div>Something went wrong. Please refresh the page.</div>}
+          >
+            <PromptForm input={input} setInput={setInput} />
+          </ErrorBoundary>
           <FooterText className="hidden sm:block" />
         </div>
       </div>

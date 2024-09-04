@@ -29,7 +29,8 @@ export function useModels() {
   )
 
   return {
-    models: data?.data ?? [],
+    models:
+      data?.data.slice().sort((a, b) => a.name.localeCompare(b.name)) ?? [],
     isLoading,
     error
   }

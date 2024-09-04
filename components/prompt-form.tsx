@@ -17,6 +17,7 @@ import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { useRouter } from 'next/navigation'
 import { useQueryState } from 'nuqs'
 import { handleMessageSubmission } from '@/lib/chat/utils'
+import { useOpenRouterAuth } from '@/app/openrouter-auth-provider'
 
 export function PromptForm({
   input,
@@ -29,6 +30,7 @@ export function PromptForm({
   const { formRef, onKeyDown } = useEnterSubmit()
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const { submitUserMessage } = useActions()
+  const { openRouterKey, setIsDialogOpen } = useOpenRouterAuth()
   const [modelSlug, _] = useQueryState('modelSlug')
   const [__, setMessages] = useUIState<typeof AI>()
 
@@ -55,9 +57,15 @@ export function PromptForm({
           return
         }
 
+        if (!openRouterKey) {
+          setIsDialogOpen(true)
+          return
+        }
+
         await handleMessageSubmission(
           value,
           modelSlug,
+          openRouterKey,
           setMessages,
           submitUserMessage
         )

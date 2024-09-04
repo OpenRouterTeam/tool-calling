@@ -14,12 +14,14 @@ type SetMessagesFunction = (
 
 type SubmitUserMessageFunction = (
   message: string,
-  modelSlug: string | null
+  modelSlug: string | null,
+  openRouterKey: string | null
 ) => Promise<Message>
 
 export async function handleMessageSubmission(
   message: string,
   modelSlug: string | null,
+  openRouterKey: string | null,
   setMessages: SetMessagesFunction,
   submitUserMessage: SubmitUserMessageFunction,
   shouldAppendOptimisticUserMessage: boolean = true
@@ -35,10 +37,13 @@ export async function handleMessageSubmission(
   }
 
   try {
-    const responseMessage = await submitUserMessage(message, modelSlug)
+    const responseMessage = await submitUserMessage(
+      message,
+      modelSlug,
+      openRouterKey
+    )
     setMessages(currentMessages => [...currentMessages, responseMessage])
   } catch (error) {
-    console.error('Error submitting user message:', error)
     setMessages(currentMessages => [
       ...currentMessages,
       {
