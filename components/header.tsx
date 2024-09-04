@@ -3,18 +3,13 @@ import Link from 'next/link'
 
 import { cn } from '@/lib/utils'
 import { auth } from '@/auth'
-import { Button, buttonVariants } from '@/components/ui/button'
-import {
-  IconGitHub,
-  IconOpenRouter,
-  IconSeparator,
-  IconVercel
-} from '@/components/ui/icons'
-import { UserMenu } from '@/components/user-menu'
+import { buttonVariants } from '@/components/ui/button'
+import { IconGitHub, IconOpenRouter } from '@/components/ui/icons'
 import { SidebarMobile } from './sidebar-mobile'
 import { SidebarToggle } from './sidebar-toggle'
 import { ChatHistory } from './chat-history'
 import { Session } from '@/lib/types'
+import { SignInWithOpenRouterButton } from '@/components/sign-in-with-openrouter-button'
 
 async function UserOrLogin() {
   const session = (await auth()) as Session
@@ -33,16 +28,6 @@ async function UserOrLogin() {
           <span className="font-medium text-sm">OpenRouter</span>
         </Link>
       )}
-      <div className="flex items-center">
-        <IconSeparator className="size-6 text-muted-foreground/50" />
-        {session?.user ? (
-          <UserMenu user={session.user} />
-        ) : (
-          <Button variant="link" asChild className="-ml-2">
-            <Link href="/login">Login</Link>
-          </Button>
-        )}
-      </div>
     </>
   )
 }
@@ -65,15 +50,7 @@ export function Header() {
           <IconGitHub />
           <span className="hidden ml-2 md:flex">GitHub</span>
         </a>
-        <a
-          href="https://vercel.com/templates/Next.js/nextjs-ai-chatbot"
-          target="_blank"
-          className={cn(buttonVariants())}
-        >
-          <IconVercel className="mr-2" />
-          <span className="hidden sm:block">Deploy to Vercel</span>
-          <span className="sm:hidden">Deploy</span>
-        </a>
+        <SignInWithOpenRouterButton />
       </div>
     </header>
   )

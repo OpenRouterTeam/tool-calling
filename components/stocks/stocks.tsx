@@ -6,10 +6,12 @@ import type { AI } from '@/lib/chat/actions'
 import type { Stock } from '@/lib/types'
 import { useQueryState } from 'nuqs'
 import { handleMessageSubmission } from '@/lib/chat/utils'
+import { useOpenRouterAuth } from '@/app/openrouter-auth-provider'
 
 export function Stocks({ stocks }: { stocks: Stock[] }) {
   const [, setMessages] = useUIState<typeof AI>()
   const { submitUserMessage } = useActions()
+  const { openRouterKey, setIsDialogOpen } = useOpenRouterAuth()
   const [modelSlug, _] = useQueryState('modelSlug')
 
   return (
@@ -19,15 +21,20 @@ export function Stocks({ stocks }: { stocks: Stock[] }) {
           <button
             key={stock.symbol}
             className="flex cursor-pointer flex-row gap-2 rounded-lg bg-white dark:bg-zinc-800 p-2 text-left hover:bg-zinc-700 sm:w-52"
-            onClick={() =>
+            onClick={() => {
+              if (!openRouterKey) {
+                setIsDialogOpen(true)
+                return
+              }
               handleMessageSubmission(
                 `View ${stock.symbol}`,
                 modelSlug,
+                openRouterKey,
                 setMessages,
                 submitUserMessage,
                 false
               )
-            }
+            }}
           >
             <div
               className={`text-xl ${

@@ -14,9 +14,9 @@ import {
   TooltipContent,
   TooltipTrigger
 } from '@/components/ui/tooltip'
-import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 import { type Chat } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { useLocalStorage } from '@uidotdev/usehooks'
 
 interface SidebarItemProps {
   index: number

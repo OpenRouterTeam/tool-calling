@@ -129,7 +129,11 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
   }
 }
 
-async function submitUserMessage(content: string, modelSlug?: string) {
+async function submitUserMessage(
+  content: string,
+  modelSlug?: string,
+  openRouterKey?: string
+) {
   'use server'
 
   const aiState = getMutableAIState<typeof AI>()
@@ -150,7 +154,7 @@ async function submitUserMessage(content: string, modelSlug?: string) {
   let textNode: undefined | React.ReactNode
 
   const openrouter = createOpenRouter({
-    // apiKey: process.env.OPENROUTER_API_KEY,
+    apiKey: openRouterKey ?? process.env.OPENROUTER_API_KEY,
     // send extra body parameters to openrouter if needed: https://openrouter.ai/docs
     extraBody: {
       provider: {

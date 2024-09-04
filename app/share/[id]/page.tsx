@@ -1,5 +1,5 @@
 import { type Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 import { formatDate } from '@/lib/utils'
 import { getSharedChat } from '@/app/actions'
@@ -49,7 +49,7 @@ export default async function SharePage({ params }: SharePageProps) {
           </div>
         </div>
         <AI>
-          <ChatList messages={uiState} isShared={true} />
+          <ChatList messages={uiState} />
         </AI>
       </div>
       <FooterText className="py-8" />

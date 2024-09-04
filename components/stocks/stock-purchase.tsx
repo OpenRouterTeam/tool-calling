@@ -53,6 +53,8 @@ export function Purchase({
     setAIState({ ...aiState, messages: [...aiState.messages, message] })
   }
 
+  const [error, setError] = useState<string | null>(null)
+
   return (
     <div className="p-4 text-green-400 border rounded-xl dark:bg-zinc-950 z-10">
       <div className="inline-block float-right px-2 py-1 text-xs rounded-full bg-white/10">
@@ -114,17 +116,26 @@ export function Purchase({
           </div>
 
           <button
-            className="w-full px-4 py-2 mt-6 font-bold bg-green-400 rounded-lg text-zinc-900 hover:bg-green-500"
+            className="w-full px-4 py-2 mt-6 font-bold bg-green-400 rounded-lg text-zinc-900 hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={async () => {
-              const response = await confirmPurchase(symbol, price, value)
-              setPurchasingUI(response.purchasingUI)
+              try {
+                setError(null)
+                const response = await confirmPurchase(symbol, price, value)
+                setPurchasingUI(response.purchasingUI)
 
-              // Insert a new system message to the UI.
-              setMessages((currentMessages: any) => [
-                ...currentMessages,
-                response.newMessage
-              ])
+                // Insert a new system message to the UI.
+                setMessages(currentMessages => [
+                  ...currentMessages,
+                  response.newMessage
+                ])
+              } catch (err) {
+                console.error('Error during purchase:', err)
+                setError(
+                  'An error occurred during the purchase. Please try again.'
+                )
+              }
             }}
+            disabled={!!error}
           >
             Purchase
           </button>
@@ -137,6 +148,7 @@ export function Purchase({
       ) : status === 'expired' ? (
         <p className="mb-2 text-white">Your checkout session has expired!</p>
       ) : null}
+      {error && <p className="mt-2 text-red-500">{error}</p>}
     </div>
   )
 }
