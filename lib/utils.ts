@@ -5,6 +5,21 @@ import { twMerge } from 'tailwind-merge'
 export const openRouterBaseUrl = 'https://openrouter.ai'
 export const codeChallengeMethod = 'S256'
 
+export function removeTrailingSlash(str: string) {
+  return str.charAt(str.length - 1) === '/' ? str.slice(0, -1) : str
+}
+
+export const getSiteURL = () => {
+  let url =
+    process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this to your site URL in Vercel env (needed for cors).
+    process?.env?.NEXT_PUBLIC_VERCEL_URL ?? // Automatically set by Vercel for the deployment.
+    'http://localhost:3000'
+  // Make sure to include `https://` when not localhost.
+  url = url.includes('http') ? url : `https://${url}`
+  // Make sure to omit trailing `/`.
+  return removeTrailingSlash(url)
+}
+
 export function isDev() {
   return process.env.NODE_ENV === 'development'
 }
