@@ -11,7 +11,7 @@ import { useQueryState } from 'nuqs'
 import { toast } from 'sonner'
 import { useLocalStorage } from '@uidotdev/usehooks'
 import { getCodeChallenge, getCodeVerifier } from '@/lib/auth'
-import { codeChallengeMethod, isDev, openRouterBaseUrl } from '@/lib/utils'
+import { codeChallengeMethod, getSiteURL, openRouterBaseUrl } from '@/lib/utils'
 
 interface OpenRouterAuthContextType {
   openRouterKey: string | null
@@ -28,9 +28,6 @@ const OpenRouterAuthContext = createContext<
 >(undefined)
 
 const oauthBaseUrl = `${openRouterBaseUrl}/auth`
-const defaultCallbackUrl = isDev()
-  ? 'http://localhost:3000'
-  : 'https://tool-calling.openrouter.ai'
 
 export function OpenRouterAuthProvider({
   children
@@ -55,7 +52,7 @@ export function OpenRouterAuthProvider({
 
   const hasRunEffect = useRef(false)
 
-  const [callbackUrl, setCallbackUrl] = useState(defaultCallbackUrl)
+  const [callbackUrl, setCallbackUrl] = useState(getSiteURL())
 
   useEffect(() => {
     setCallbackUrl(globalThis.window.location.origin)
