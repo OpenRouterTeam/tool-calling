@@ -43,7 +43,7 @@ import {
 } from '../types/tools'
 import { APICallError, CoreMessage } from 'ai'
 
-const defaultModelSlug = 'anthropic/claude-3.5-sonnet:beta'
+const defaultModelSlug = 'anthropic/claude-3.5-sonnet'
 const defaultErrorMessage = 'An error occurred while processing your request.'
 const systemMessage = `\
 You are a stock trading conversation bot and you can help users buy stocks, step by step.

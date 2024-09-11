@@ -41,7 +41,7 @@ const featuredToolCallingModels = [
 export function ModelSelectContent() {
   const { models, isLoading, error } = useModels()
   const [modelSlug, setModelSlug] = useQueryState('modelSlug', {
-    defaultValue: 'anthropic/claude-3.5-sonnet:beta'
+    defaultValue: 'anthropic/claude-3.5-sonnet'
   })
 
   const modelOptions = useMemo(() => {
