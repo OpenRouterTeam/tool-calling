@@ -26,7 +26,6 @@ const featuredToolCallingModels = [
   'anthropic/claude-3-opus',
   'anthropic/claude-3.5-sonnet',
   'mistralai/mistral-nemo',
-  'mistralai/mistral-large',
   'openai/gpt-3.5-turbo',
   'openai/gpt-4-turbo',
   'openai/gpt-4',
