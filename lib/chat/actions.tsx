@@ -29,7 +29,8 @@ import {
   runAsyncFnWithoutBlocking,
   sleep,
   nanoid,
-  openRouterBaseUrl
+  openRouterBaseUrl,
+  mistralNanoid
 } from '@/lib/utils'
 import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
@@ -59,6 +60,12 @@ If the user wants to sell stock, or complete another impossible task, respond th
 Don't forget to provide parameters to each tools.
 
 Besides that, you can also chat with users and do some calculations if needed.`
+
+const dummyAssistantMessage = {
+  id: nanoid(),
+  role: 'assistant',
+  content: '[waiting for user input]'
+} satisfies Message
 
 async function confirmPurchase(symbol: string, price: number, amount: number) {
   'use server'
@@ -144,6 +151,25 @@ const getErrorMessage = (error: unknown): string => {
     return error.responseBody || error.message || defaultErrorMessage
   }
   return defaultErrorMessage
+}
+
+function isMistralModel(modelSlug?: string): boolean {
+  return modelSlug === 'mistralai/mistral-large'
+}
+
+function isGeminiModel(modelSlug?: string): boolean {
+  return (
+    modelSlug === 'google/gemini-flash-1.5' ||
+    modelSlug === 'google/gemini-pro-1.5'
+  )
+}
+
+function shouldAddDummyAssistantMessage(modelSlug?: string): boolean {
+  return isMistralModel(modelSlug) || isGeminiModel(modelSlug)
+}
+
+function getToolCallId(modelSlug?: string): string {
+  return isMistralModel(modelSlug) ? mistralNanoid() : nanoid()
 }
 
 async function submitUserMessage(
@@ -238,7 +264,7 @@ async function submitUserMessage(
 
             await sleep(1000)
 
-            const toolCallId = nanoid()
+            const toolCallId = getToolCallId(modelSlug)
 
             aiState.done({
               ...aiState.get(),
@@ -267,7 +293,10 @@ async function submitUserMessage(
                       result: stocks
                     }
                   ]
-                }
+                },
+                ...(shouldAddDummyAssistantMessage(modelSlug)
+                  ? [dummyAssistantMessage]
+                  : [])
               ]
             })
 
@@ -291,7 +320,7 @@ async function submitUserMessage(
 
             await sleep(1000)
 
-            const toolCallId = nanoid()
+            const toolCallId = getToolCallId(modelSlug)
 
             aiState.done({
               ...aiState.get(),
@@ -320,7 +349,10 @@ async function submitUserMessage(
                       result: { symbol, price, delta }
                     }
                   ]
-                }
+                },
+                ...(shouldAddDummyAssistantMessage(modelSlug)
+                  ? [dummyAssistantMessage]
+                  : [])
               ]
             })
 
@@ -336,7 +368,7 @@ async function submitUserMessage(
             'Show price and the UI to purchase a stock or currency. Use this if the user wants to purchase a stock or currency.',
           parameters: showStockPurchaseParameters,
           generate: async function* ({ symbol, price, numberOfShares = 100 }) {
-            const toolCallId = nanoid()
+            const toolCallId = getToolCallId(modelSlug)
 
             if (numberOfShares <= 0 || numberOfShares > 1000) {
               aiState.done({
@@ -372,6 +404,9 @@ async function submitUserMessage(
                       }
                     ]
                   },
+                  ...(shouldAddDummyAssistantMessage(modelSlug)
+                    ? [dummyAssistantMessage]
+                    : []),
                   {
                     id: nanoid(),
                     role: 'system',
@@ -410,11 +445,14 @@ async function submitUserMessage(
                           symbol,
                           price,
                           numberOfShares,
-                          status: 'requires_action' // TODO verify
+                          status: 'requires_action'
                         }
                       }
                     ]
-                  }
+                  },
+                  ...(shouldAddDummyAssistantMessage(modelSlug)
+                    ? [dummyAssistantMessage]
+                    : [])
                 ]
               })
 
@@ -446,7 +484,7 @@ async function submitUserMessage(
 
             await sleep(1000)
 
-            const toolCallId = nanoid()
+            const toolCallId = getToolCallId(modelSlug)
 
             aiState.done({
               ...aiState.get(),
@@ -475,7 +513,10 @@ async function submitUserMessage(
                       result: events
                     }
                   ]
-                }
+                },
+                ...(shouldAddDummyAssistantMessage(modelSlug)
+                  ? [dummyAssistantMessage]
+                  : [])
               ]
             })
 

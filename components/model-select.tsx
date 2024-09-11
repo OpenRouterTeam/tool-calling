@@ -32,10 +32,14 @@ const featuredToolCallingModels = [
   'openai/gpt-4-0314',
   'openai/gpt-4-0613',
   'openai/gpt-4-32k',
-  'openai/gpt-4-32k-0314'
+  'openai/gpt-4-32k-0314',
   // These are highly rate-limited
   // 'google/gemini-flash-1.5-exp',
   // 'google/gemini-pro-1.5-exp'
+
+  'google/gemini-pro-1.5',
+  'google/gemini-flash-1.5',
+  'mistralai/mistral-large'
 ]
 
 export function ModelSelectContent() {

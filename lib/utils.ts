@@ -33,6 +33,11 @@ export const nanoid = customAlphabet(
   7
 ) // 7-character random string
 
+export const mistralNanoid = customAlphabet(
+  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+  9
+) // 9-character random string
+
 export async function fetcher<JSON = any>(
   input: RequestInfo,
   init?: RequestInit
