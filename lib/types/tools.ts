@@ -43,12 +43,12 @@ export const showStockPurchaseParameters = z.object({
     .describe(
       'The name or symbol of the stock or currency. e.g. NVDA/AAPL/USD.'
     ),
-  price: z.number().describe('The price of the stock.'),
+  price: z.number().describe('The imaginary price of the stock. e.g. 390'),
   numberOfShares: z
     .number()
     .optional()
     .describe(
-      'The **number of shares** for a stock or currency to purchase. Can be optional if the user did not specify it.'
+      'The **number of shares** for a stock or currency to purchase. Can be optional if the user did not specify it. e.g. 10'
     )
 })
 
@@ -58,8 +58,10 @@ export const showStockPriceParameters = z.object({
     .describe(
       'The name or symbol of the stock or currency. e.g. NVDA/AAPL/USD.'
     ),
-  price: z.number().describe('The price of the stock.'),
-  delta: z.number().describe('The change in price of the stock')
+  price: z.number().describe('The imaginary price of the stock. e.g. 390'),
+  delta: z
+    .number()
+    .describe('The imaginary change in price of the stock. e.g. 15')
 })
 
 export const getEventsParameters = z.object({
@@ -75,9 +77,13 @@ export const getEventsParameters = z.object({
 export const listStocksParameters = z.object({
   stocks: z.array(
     z.object({
-      symbol: z.string().describe('The symbol of the stock'),
-      price: z.number().describe('The price of the stock'),
-      delta: z.number().describe('The change in price of the stock')
+      symbol: z
+        .string()
+        .describe('The symbol of the stock. e.g. NVDA/AAPL/USD'),
+      price: z.number().describe('The imaginary price of the stock. e.g. 390'),
+      delta: z
+        .number()
+        .describe('The imaginary change in price of the stock. e.g. 15')
     })
   )
 })

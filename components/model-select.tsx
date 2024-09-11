@@ -20,6 +20,29 @@ import {
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import { TooltipPortal } from '@radix-ui/react-tooltip'
 
+const featuredToolCallingModels = [
+  'anthropic/claude-3-haiku',
+  'anthropic/claude-3-sonnet',
+  'anthropic/claude-3-opus',
+  'anthropic/claude-3.5-sonnet',
+  'anthropic/claude-3-haiku:beta',
+  'anthropic/claude-3-sonnet:beta',
+  'anthropic/claude-3-opus:beta',
+  'anthropic/claude-3.5-sonnet:beta',
+  'mistralai/mistral-nemo',
+  'mistralai/mistral-large',
+  'openai/gpt-3.5-turbo',
+  'openai/gpt-4-turbo',
+  'openai/gpt-4',
+  'openai/gpt-4-0314',
+  'openai/gpt-4-0613',
+  'openai/gpt-4-32k',
+  'openai/gpt-4-32k-0314'
+  // These are highly rate-limited
+  // 'google/gemini-flash-1.5-exp',
+  // 'google/gemini-pro-1.5-exp'
+]
+
 export function ModelSelectContent() {
   const { models, isLoading, error } = useModels()
   const [modelSlug, setModelSlug] = useQueryState('modelSlug', {
@@ -41,11 +64,13 @@ export function ModelSelectContent() {
         </SelectItem>
       ]
     }
-    return models.map(model => (
-      <SelectItem key={model.id} value={model.id}>
-        {model.name}
-      </SelectItem>
-    ))
+    return models
+      .filter(model => featuredToolCallingModels.includes(model.id))
+      .map(model => (
+        <SelectItem key={model.id} value={model.id}>
+          {model.name}
+        </SelectItem>
+      ))
   }, [models, isLoading, error])
 
   return (
@@ -56,7 +81,7 @@ export function ModelSelectContent() {
       <SelectContent className="w-full">
         <SelectGroup>
           <SelectLabel className="flex items-center gap-1">
-            OpenRouter Tool Calling Models [A-Z]
+            Featured OpenRouter Tool Calling Models [A-Z]
             <Tooltip delayDuration={0}>
               <TooltipPortal>
                 <TooltipContent className="z-50">
