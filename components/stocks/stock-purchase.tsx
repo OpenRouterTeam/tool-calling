@@ -56,7 +56,7 @@ export function Purchase({
   const [error, setError] = useState<string | null>(null)
 
   return (
-    <div className="p-4 text-green-400 border rounded-xl dark:bg-zinc-950 z-10">
+    <div className="p-4 text-green-400 border rounded-xl bg-white dark:bg-zinc-950 z-10">
       <div className="inline-block float-right px-2 py-1 text-xs rounded-full bg-white/10">
         +1.23% ↑
       </div>
