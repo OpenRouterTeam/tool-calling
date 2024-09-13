@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useQueryState } from 'nuqs'
 import {
   Select,
@@ -19,6 +19,8 @@ import {
 } from '@/components/ui/tooltip'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import { TooltipPortal } from '@radix-ui/react-tooltip'
+import { useUIState } from 'ai/rsc'
+import { AI } from '@/lib/chat/actions'
 
 const featuredToolCallingModels = [
   'anthropic/claude-3-haiku',
@@ -47,6 +49,15 @@ export function ModelSelectContent() {
   const [modelSlug, setModelSlug] = useQueryState('modelSlug', {
     defaultValue: 'anthropic/claude-3.5-sonnet'
   })
+  const [__, setMessages] = useUIState<typeof AI>()
+
+  const onValueChange = useCallback(
+    (value: string) => {
+      setModelSlug(value)
+      setMessages([])
+    },
+    [setModelSlug, setMessages]
+  )
 
   const modelOptions = useMemo(() => {
     if (isLoading) {
@@ -73,7 +84,7 @@ export function ModelSelectContent() {
   }, [models, isLoading, error])
 
   return (
-    <Select onValueChange={setModelSlug} value={modelSlug ?? ''}>
+    <Select onValueChange={onValueChange} value={modelSlug ?? ''}>
       <SelectTrigger className="w-full bg-background rounded-lg">
         <SelectValue placeholder="Select a model" />
       </SelectTrigger>
