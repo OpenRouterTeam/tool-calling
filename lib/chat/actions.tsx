@@ -164,8 +164,16 @@ function isGeminiModel(modelSlug?: string): boolean {
   )
 }
 
+function isCohereModel(modelSlug?: string): boolean {
+  return modelSlug === 'cohere/command-r-plus-08-2024'
+}
+
 function shouldAddDummyAssistantMessage(modelSlug?: string): boolean {
-  return isMistralModel(modelSlug) || isGeminiModel(modelSlug)
+  return (
+    isMistralModel(modelSlug) ||
+    isGeminiModel(modelSlug) ||
+    isCohereModel(modelSlug)
+  )
 }
 
 function getToolCallId(modelSlug?: string): string {
@@ -202,7 +210,7 @@ async function submitUserMessage(
     // send extra body parameters to openrouter if needed: https://openrouter.ai/docs
     // extraBody: {
     //   provider: {
-    //     order: ['OctoAI', 'Lepton']
+    //     order: ['Together']
     //   }
     // }
   })

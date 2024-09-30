@@ -38,6 +38,8 @@ const featuredToolCallingModels = [
   // These are highly rate-limited
   // 'google/gemini-flash-1.5-exp',
   // 'google/gemini-pro-1.5-exp'
+  // 'meta-llama/llama-3.1-405b-instruct',
+  'cohere/command-r-plus-08-2024',
 
   'google/gemini-pro-1.5',
   'google/gemini-flash-1.5',
