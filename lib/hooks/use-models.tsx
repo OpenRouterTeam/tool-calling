@@ -19,7 +19,7 @@ const fetcher = async (url: string): Promise<ModelsResponse> => {
 
 export function useModels() {
   const { data, error, isLoading } = useSWR<ModelsResponse>(
-    'https://openrouter.ai/api/v1/models?supported_parameters=tools,tool_choice',
+    'https://openrouter.ai/api/v1/models?supported_parameters=tools',
     fetcher,
     {
       revalidateOnFocus: false,
