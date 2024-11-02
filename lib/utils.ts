@@ -2,7 +2,8 @@ import { clsx, type ClassValue } from 'clsx'
 import { customAlphabet } from 'nanoid'
 import { twMerge } from 'tailwind-merge'
 
-export const openRouterBaseUrl = 'https://openrouter.ai'
+export const openRouterBaseUrl =
+  process.env.NEXT_PUBLIC_OPENROUTER_BASE_URL || 'https://openrouter.ai'
 export const codeChallengeMethod = 'S256'
 
 export function removeTrailingSlash(str: string) {

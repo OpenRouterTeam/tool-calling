@@ -205,7 +205,7 @@ async function submitUserMessage(
   let textNode: undefined | React.ReactNode
 
   const openrouter = createOpenRouter({
-    baseURL: openRouterBaseUrl + '/api/v1/',
+    baseURL: openRouterBaseUrl + '/api/alpha/',
     apiKey: openRouterKey ?? process.env.OPENROUTER_API_KEY
     // send extra body parameters to openrouter if needed: https://openrouter.ai/docs
     // extraBody: {
