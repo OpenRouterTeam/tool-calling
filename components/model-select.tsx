@@ -22,29 +22,29 @@ import { TooltipPortal } from '@radix-ui/react-tooltip'
 import { useUIState } from 'ai/rsc'
 import { AI } from '@/lib/chat/actions'
 
-const featuredToolCallingModels = [
-  'anthropic/claude-3-haiku',
-  'anthropic/claude-3-sonnet',
-  'anthropic/claude-3-opus',
-  'anthropic/claude-3.5-sonnet',
-  'mistralai/mistral-nemo',
-  'openai/gpt-3.5-turbo',
-  'openai/gpt-4-turbo',
-  'openai/gpt-4',
-  'openai/gpt-4-0314',
-  'openai/gpt-4-0613',
-  'openai/gpt-4-32k',
-  'openai/gpt-4-32k-0314',
-  // These are highly rate-limited
-  // 'google/gemini-flash-1.5-exp',
-  // 'google/gemini-pro-1.5-exp'
-  // 'meta-llama/llama-3.1-405b-instruct',
-  'cohere/command-r-plus-08-2024',
+// const featuredToolCallingModels = [
+//   'anthropic/claude-3-haiku',
+//   'anthropic/claude-3-sonnet',
+//   'anthropic/claude-3-opus',
+//   'anthropic/claude-3.5-sonnet',
+//   'mistralai/mistral-nemo',
+//   'openai/gpt-3.5-turbo',
+//   'openai/gpt-4-turbo',
+//   'openai/gpt-4',
+//   'openai/gpt-4-0314',
+//   'openai/gpt-4-0613',
+//   'openai/gpt-4-32k',
+//   'openai/gpt-4-32k-0314',
+//   // These are highly rate-limited
+//   // 'google/gemini-flash-1.5-exp',
+//   // 'google/gemini-pro-1.5-exp'
+//   // 'meta-llama/llama-3.1-405b-instruct',
+//   'cohere/command-r-plus-08-2024',
 
-  'google/gemini-pro-1.5',
-  'google/gemini-flash-1.5',
-  'mistralai/mistral-large'
-]
+//   'google/gemini-pro-1.5',
+//   'google/gemini-flash-1.5',
+//   'mistralai/mistral-large'
+// ]
 
 export function ModelSelectContent() {
   const { models, isLoading, error } = useModels()
@@ -76,13 +76,15 @@ export function ModelSelectContent() {
         </SelectItem>
       ]
     }
-    return models
-      .filter(model => featuredToolCallingModels.includes(model.id))
-      .map(model => (
-        <SelectItem key={model.id} value={model.id}>
-          {model.name}
-        </SelectItem>
-      ))
+    return (
+      models
+        // .filter(model => featuredToolCallingModels.includes(model.id))
+        .map(model => (
+          <SelectItem key={model.id} value={model.id}>
+            {model.name}
+          </SelectItem>
+        ))
+    )
   }, [models, isLoading, error])
 
   return (
