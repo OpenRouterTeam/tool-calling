@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { openRouterBaseUrl } from '../utils'
+import { openRouterAPIBaseUrl } from '../utils'
 
 interface Model {
   id: string
@@ -20,7 +20,7 @@ const fetcher = async (url: string): Promise<ModelsResponse> => {
 
 export function useModels() {
   const { data, error, isLoading } = useSWR<ModelsResponse>(
-    `${openRouterBaseUrl}/api/v1/models?supported_parameters=tools`,
+    `${openRouterAPIBaseUrl}/api/v1/models?supported_parameters=tools`,
     fetcher,
     {
       revalidateOnFocus: false,

@@ -76,15 +76,13 @@ export function ModelSelectContent() {
         </SelectItem>
       ]
     }
-    return (
-      models
-        // .filter(model => featuredToolCallingModels.includes(model.id))
-        .map(model => (
-          <SelectItem key={model.id} value={model.id}>
-            {model.name}
-          </SelectItem>
-        ))
-    )
+    return models
+      .filter(model => !model.id.includes(':'))
+      .map(model => (
+        <SelectItem key={model.id} value={model.id}>
+          {model.name}
+        </SelectItem>
+      ))
   }, [models, isLoading, error])
 
   return (

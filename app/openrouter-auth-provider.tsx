@@ -11,7 +11,7 @@ import { useQueryState } from 'nuqs'
 import { toast } from 'sonner'
 import { useLocalStorage } from '@uidotdev/usehooks'
 import { getCodeChallenge, getCodeVerifier } from '@/lib/auth'
-import { codeChallengeMethod, getSiteURL, openRouterBaseUrl } from '@/lib/utils'
+import { codeChallengeMethod, getSiteURL, openRouterWebUrl } from '@/lib/utils'
 
 interface OpenRouterAuthContextType {
   openRouterKey: string | null
@@ -27,7 +27,7 @@ const OpenRouterAuthContext = createContext<
   OpenRouterAuthContextType | undefined
 >(undefined)
 
-const oauthBaseUrl = `${openRouterBaseUrl}/auth`
+const oauthBaseUrl = `${openRouterWebUrl}/auth`
 
 export function OpenRouterAuthProvider({
   children

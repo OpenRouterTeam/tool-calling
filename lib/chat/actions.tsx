@@ -29,7 +29,7 @@ import {
   runAsyncFnWithoutBlocking,
   sleep,
   nanoid,
-  openRouterBaseUrl,
+  openRouterAPIBaseUrl,
   mistralNanoid
 } from '@/lib/utils'
 import { saveChat } from '@/app/actions'
@@ -205,7 +205,7 @@ async function submitUserMessage(
   let textNode: undefined | React.ReactNode
 
   const openrouter = createOpenRouter({
-    baseURL: openRouterBaseUrl + '/api/alpha/',
+    baseURL: openRouterAPIBaseUrl + '/api/v1/',
     apiKey: openRouterKey ?? process.env.OPENROUTER_API_KEY
     // send extra body parameters to openrouter if needed: https://openrouter.ai/docs
     // extraBody: {

@@ -1,4 +1,8 @@
-import { codeChallengeMethod, openRouterBaseUrl } from '@/lib/utils'
+import {
+  codeChallengeMethod,
+  openRouterAPIBaseUrl,
+  openRouterWebUrl
+} from '@/lib/utils'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
@@ -13,7 +17,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const response = await fetch(`${openRouterBaseUrl}/api/v1/auth/keys`, {
+    // TODO switch to api url
+    const response = await fetch(`${openRouterWebUrl}/api/v1/auth/keys`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
