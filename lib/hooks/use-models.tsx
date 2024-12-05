@@ -31,7 +31,14 @@ export function useModels() {
 
   return {
     models:
-      data?.data.slice().sort((a, b) => a.name.localeCompare(b.name)) ?? [],
+      data?.data
+        .slice()
+        .sort(
+          (a, b) => a.id.localeCompare(b.id) || a.name.length - b.name.length
+        )
+        .filter(
+          (item, index, array) => index === 0 || item.id !== array[index - 1].id
+        ) ?? [],
     isLoading,
     error
   }
