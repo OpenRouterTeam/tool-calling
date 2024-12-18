@@ -234,6 +234,7 @@ async function submitUserMessage(
       model,
       initial: <SpinnerMessage />,
       messages,
+      maxTokens: 3000,
       text: ({ content, done, delta }) => {
         if (!textStream) {
           textStream = createStreamableValue('')
